@@ -23,7 +23,7 @@ module Middleman
 
       # Rack middleware to look for CSS and apply prefixes.
       class Rack
-        INLINE_CSS_REGEX = /(<style(?![^>]+data\-noprefix).*?>\s*(?:\/\*<!\[CDATA\[\*\/\n)?)(.*?)((?:(?:\n\s*)?\/\*\]\]>\*\/)?\s*<\/style>)/m
+        INLINE_CSS_REGEX = /(<style[^>]*>\s*(?:\/\*<!\[CDATA\[\*\/\n)?)(.*?)((?:(?:\n\s*)?\/\*\]\]>\*\/)?\s*<\/style>)/m
 
         # Init
         # @param [Class] app
@@ -73,7 +73,11 @@ module Middleman
         end
 
         def prefix(content, path = nil)
-          @processor.process(content, path ? { from: path } : {}).css
+          begin
+            @processor.process(content, path ? { from: path } : {}).css
+          rescue ExecJS::RuntimeError
+            content
+          end
         end
 
         def prefix_inline_styles(content)
