@@ -58,6 +58,12 @@ Feature: Postprocessing stylesheets with Autoprefixer in different configuration
     Then I should not see "-ms-border-radius"
     And I should see "border-radius"
 
+  Scenario: Inline HTML and ignoring CSS
+    Given the Server is running at "inline-app"
+    When I go to "/index.html"
+    Then I should see "-ms-border-radius"
+    And I should see "border-radius"
+
   Scenario: Ignoring paths
     Given the Server is running at "ignore-app"
     When I go to "/stylesheets/yep-1.css"
